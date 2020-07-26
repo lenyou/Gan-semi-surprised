@@ -19,11 +19,12 @@ class Discriminator(nn.Module):
         self.final = LinearWeightNorm(250, output_dim, weight_scale=1)
     def forward(self, x, feature = False, cuda = False, first = False):
 #        pdb.set_trace()
-        x = x.view(-1, self.input_dim)
+        x = x.view(-1, self.input_dim).cuda()
         noise = torch.randn(x.size()) * 0.05 if self.training else torch.Tensor([0])
         if cuda:
             noise = noise.cuda()
-        x = x + Variable(noise, requires_grad = False)
+        
+        x = x + Variable(noise,requires_grad=False)
         if first:
             return self.layers[0](x)
         for i in range(len(self.layers)):
